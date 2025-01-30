@@ -1,41 +1,46 @@
 import { defineStore } from "pinia";
 
-interface IThemeStore {
-  themeMode: "light" | "dark";
-}
+type ThemeMode = "light" | "dark";
 
-const LIGHT = "light";
-const DARK = "dark";
+const LIGHT: ThemeMode = "light";
+const DARK: ThemeMode = "dark";
 const THEME_KEY = "themeMode";
 
 export const useThemeStore = defineStore("theme", {
-  state: () =>
-    <IThemeStore>{
-      themeMode: LIGHT,
-    },
+  state: () => ({
+    themeMode: LIGHT as ThemeMode,
+  }),
+
   getters: {
     theme: (state) => state.themeMode,
     isDark: (state) => state.themeMode === DARK,
   },
+
   actions: {
     initTheme() {
-      const cache = localStorage.getItem(THEME_KEY);
-      if (cache) {
-        this.themeMode = cache as "light" | "dark";
-      }
-
+      const savedTheme = localStorage.getItem(THEME_KEY);
+      this.themeMode = this.validateTheme(savedTheme);
       this.applyTheme();
     },
+
     toggleTheme() {
       this.themeMode = this.themeMode === LIGHT ? DARK : LIGHT;
+      this.persistTheme();
       this.applyTheme();
+    },
+
+    applyTheme() {
+      const htmlClass = document.documentElement.classList;
+      htmlClass.remove(LIGHT, DARK);
+      htmlClass.add(this.themeMode);
+    },
+
+    persistTheme() {
       localStorage.setItem(THEME_KEY, this.themeMode);
     },
-    applyTheme() {
-      document.documentElement.classList.remove(LIGHT, DARK);
-      document.body.classList.remove(LIGHT, DARK);
-      document.documentElement.classList.add(this.themeMode);
-      document.body.classList.add(this.themeMode);
+
+    validateTheme(theme: string | null): ThemeMode {
+      return theme === LIGHT || theme === DARK ? theme : LIGHT;
     },
   },
 });
