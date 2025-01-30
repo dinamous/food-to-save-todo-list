@@ -2,7 +2,6 @@ import "./global.css";
 
 import { createHead } from "@unhead/vue";
 import { createApp } from "vue";
-import { createI18n } from "vue-i18n";
 
 import App from "./App.vue";
 const head = createHead();
