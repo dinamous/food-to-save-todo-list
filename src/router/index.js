@@ -1,13 +1,13 @@
 import { createRouter, createWebHistory } from "vue-router";
 
+import AppLayout from "@/pages/_layouts/TemplateApp.vue";
 import Dashboard from "@/pages/app/DashboardPage.vue";
+import NotFound from "@/pages/app/NotFound.vue";
 import Tasks from "@/pages/app/TasksPage.vue";
 import Users from "@/pages/app/UsersPage.vue";
 
-import AppLayout from "../pages/_layouts/TemplateApp.vue";
-
 const routes = [
-
+  { path: "/:pathMatch(.*)*", name: "NotFound", component: NotFound, meta: { title: "Error 404" } },
   {
     path: "/",
     component: AppLayout,
