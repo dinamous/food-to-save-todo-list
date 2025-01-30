@@ -2,23 +2,32 @@ name: Continuous Integration
 
 on:
   push:
-    branches: [ main]
+    branches: [main]
   pull_request:
-    branches: [ main]
+    branches: [main]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [ 18.x ]
+        node-version: [18.x]
+        
+    steps:
+      - uses: actions/checkout@v4  # Updated to latest version (v4)
       
-    steps:  
-    - uses: actions/checkout@v2
-    - name: use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm ci
-    - run: npm run build --if-present
-    #- run: npm test
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4  # Updated to latest version (v4)
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'  # Enable caching for faster installs
+          
+      - name: Install dependencies
+        run: npm ci
+          
+      - name: Build project
+        run: npm run build  # Remove --if-present if you're sure the script exists
+        
+      # Uncomment if you have tests
+      - name: Run tests
+        run: npm test
