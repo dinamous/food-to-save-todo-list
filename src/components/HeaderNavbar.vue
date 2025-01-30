@@ -9,7 +9,13 @@
         </Button>
 
         <!-- Logo/Title -->
-        <span class="font-semibold ml-2">Task to Save</span>
+        <div class="flex flex-1 justify-between items-center">
+          <span class="font-semibold ml-2">Task to Save</span>
+          <Button variant="outline" class="border-0 p-[6px] ml-2 w-8 h-8" @click="toggleMode">
+            <Sun v-if="true" />
+            <MoonStar v-else />
+          </Button>
+        </div>
       </div>
     </header>
 
@@ -47,6 +53,11 @@
 
 <script setup>
 import { Icon } from "@iconify/vue"
+import {
+  Bell,
+  MoonStar,
+  Sun,
+} from "lucide-vue-next"
 import { onMounted, onUnmounted, ref, watch } from "vue"
 import { useRoute } from "vue-router"
 
