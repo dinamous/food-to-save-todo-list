@@ -26,7 +26,7 @@ import { Toaster } from "vue-sonner"
 // const defaultTheme = 'dark';
 
 useHead({
-  titleTemplate: "%s | Food to save",
+  titleTemplate: "%s | Task to Save",
   meta: [
     {
       name: "description",

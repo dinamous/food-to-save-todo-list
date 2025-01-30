@@ -7,8 +7,9 @@ const routes = [
   {
     path: "/",
     component: AppLayout,
-    // meta: { auth: false },
-
+    meta: {
+      title: "Dashboard"
+    }
   }
 
 
@@ -21,7 +22,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  document.title = to.meta.title + " | pizza.shop"
+  document.title = to.meta.title + " | Task to Save"
   next()
 })
 
