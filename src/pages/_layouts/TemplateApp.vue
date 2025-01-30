@@ -1,15 +1,23 @@
-<template lang="html">
-  <Button variant="outline" class="flex items-center gap-2 select-none">
-    Button
-
-    <Icon icon="lucide:chevron-down" />
-  </Button>
+<template>
+  <HeaderNavbar>
+    <div class="p-6">
+      <router-view /> <!-- Conteúdo das páginas filhas -->
+    </div>
+  </HeaderNavbar>
 </template>
 
-
 <script setup>
-import { Button } from '@/components/ui/button'
+import HeaderNavbar from "@/components/HeaderNavbar.vue"
 </script>
-<style lang="">
 
+<style>
+/* Garante altura correta considerando o header */
+main {
+  min-height: calc(100vh - 4rem);
+}
+
+/* Transição suave para mobile */
+.aside-transition {
+  transition: transform 0.3s ease-in-out;
+}
 </style>

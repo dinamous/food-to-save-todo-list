@@ -6,9 +6,9 @@
 </template>
 
 <script setup lang="ts">
-import { useHead } from '@unhead/vue';
+import { useHead } from "@unhead/vue";
 // import { inject } from 'vue';
-import { Toaster } from 'vue-sonner'
+import { Toaster } from "vue-sonner"
 
 // const ThemeProviderContext = Symbol('ThemeProviderContext');
 
@@ -26,11 +26,11 @@ import { Toaster } from 'vue-sonner'
 // const defaultTheme = 'dark';
 
 useHead({
-  titleTemplate: '%s | pizza.shop',
+  titleTemplate: "%s | Task to Save",
   meta: [
     {
-      name: 'description',
-      content: 'a pizza shop'
+      name: "description",
+      content: "food to save TODO list"
     }
   ]
 });

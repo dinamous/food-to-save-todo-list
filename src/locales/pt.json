@@ -1,0 +1,12 @@
+{
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "tasks": "Tarefas",
+    "users": "Usuários"
+  },
+  "error_page": {
+    "title": "Algo deu errado.",
+    "subtitle": "Desculpe, não encontramos a página desejada. Você encontrará muita mais coisas a explorar.",
+    "button_back": "Voltar ao início"
+  }
+}

@@ -1,0 +1,81 @@
+<template>
+  <div>
+    <!-- Header -->
+    <header class="h-16 border-b bg-background fixed top-0 left-0 right-0 z-50">
+      <div class="flex items-center h-full px-4">
+        <!-- Botão Mobile -->
+        <Button v-if="!isOpen" @click="isOpen = true" variant="ghost" size="icon" class="md:hidden">
+          <Icon icon="lucide:menu" class="h-5 w-5" />
+        </Button>
+
+        <!-- Logo/Title -->
+        <span class="font-semibold ml-2">Task to Save</span>
+      </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside :class="[
+      'fixed md:block z-40 h-screen w-48 border-r bg-background transform transition-transform duration-300 mt-16',
+      isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+    ]">
+      <div class="flex flex-col h-[calc(100vh-4rem)] py-6 gap-6 px-4">
+        <nav class="flex flex-1 flex-col gap-4">
+          <NavLink link="/" page="Dashboard" icon="lucide:home" label="Dashboard" />
+          <NavLink link="/tasks" page="Tasks" icon="lucide:clipboard-list" label="Tarefas" />
+          <NavLink link="/users" page="Users" icon="lucide:users" label="Usuários" />
+        </nav>
+
+        <div class="mt-auto">
+          <Separator class="mb-4" />
+          <AccountMenu />
+        </div>
+      </div>
+    </aside>
+
+    <!-- Overlay Mobile -->
+    <div v-if="isOpen" class="fixed inset-0 z-30 bg-black/50 md:hidden" @click="isOpen = false" />
+
+    <!-- Conteúdo Principal -->
+    <main :class="[
+      'pt-16 md:ml-48 transition-all duration-300 min-h-screen',
+      isOpen ? 'ml-48' : 'ml-0'
+    ]">
+      <slot /> <!-- Slot para conteúdo das páginas -->
+    </main>
+  </div>
+</template>
+
+<script setup>
+import { Icon } from "@iconify/vue"
+import { onMounted, onUnmounted, ref, watch } from "vue"
+import { useRoute } from "vue-router"
+
+import NavLink from "@/components/NavLink.vue"
+import { Button } from "@/components/ui/button"
+import { Separator } from "@/components/ui/separator"
+
+import AccountMenu from "./AccountMenu.vue"
+
+const isOpen = ref(false)
+const route = useRoute()
+
+// Controle de redimensionamento
+const handleResize = () => {
+  isOpen.value = window.innerWidth >= 768
+}
+
+onMounted(() => {
+  handleResize()
+  window.addEventListener("resize", handleResize)
+})
+
+onUnmounted(() => {
+  window.removeEventListener("resize", handleResize)
+})
+
+watch(() => route.path, () => {
+  if (window.innerWidth < 768) {
+    isOpen.value = false
+  }
+})
+</script>
