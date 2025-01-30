@@ -1,5 +1,9 @@
 import { createRouter, createWebHistory } from "vue-router";
 
+import Dashboard from "@/pages/app/DashboardPage.vue";
+import Tasks from "@/pages/app/TasksPage.vue";
+import Users from "@/pages/app/UsersPage.vue";
+
 import AppLayout from "../pages/_layouts/TemplateApp.vue";
 
 const routes = [
@@ -7,9 +11,27 @@ const routes = [
   {
     path: "/",
     component: AppLayout,
-    meta: {
-      title: "Dashboard"
-    }
+
+    children: [
+      {
+        path: "/",
+        name: "Dashboard",
+        component: Dashboard,
+        meta: { title: "Dashboard" }
+      },
+      {
+        path: "/tasks",
+        name: "Tasks",
+        component: Tasks,
+        meta: { title: "Tarefas" }
+      },
+      {
+        path: "/users",
+        name: "Users",
+        component: Users,
+        meta: { title: "Usuários" }
+      },
+    ]
   }
 
 

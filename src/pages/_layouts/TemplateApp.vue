@@ -1,16 +1,23 @@
-<template lang="html">
-  <div class="flex flex-col antialiased">
-    <Header />
-  </div>
-  <div class="flex flex-1 flex-col gap-4 p-8 pt-6">
-    <router-view />
-  </div>
+<template>
+  <HeaderNavbar>
+    <div class="p-6">
+      <router-view /> <!-- Conteúdo das páginas filhas -->
+    </div>
+  </HeaderNavbar>
 </template>
 
-
 <script setup>
-import Header from "@/components/HeaderNavbar.vue";
+import HeaderNavbar from "@/components/HeaderNavbar.vue"
 </script>
-<style lang="">
 
+<style>
+/* Garante altura correta considerando o header */
+main {
+  min-height: calc(100vh - 4rem);
+}
+
+/* Transição suave para mobile */
+.aside-transition {
+  transition: transform 0.3s ease-in-out;
+}
 </style>
