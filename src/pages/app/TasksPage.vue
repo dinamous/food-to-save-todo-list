@@ -162,7 +162,7 @@ const table = useVueTable({
 
 <template>
   <h1 class="text-3xl font-bold tracking-tighter">
-    Tasks
+    {{ $t("sidebar.tasks") }}
   </h1>
   <div class="w-full">
     <div class="flex gap-2 items-center py-4">
