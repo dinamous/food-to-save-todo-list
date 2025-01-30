@@ -1,14 +1,15 @@
 <template lang="html">
-  <Button variant="outline" class="flex items-center gap-2 select-none">
-    Button
-
-    <Icon icon="lucide:chevron-down" />
-  </Button>
+  <div class="flex flex-col antialiased">
+    <Header />
+  </div>
+  <div class="flex flex-1 flex-col gap-4 p-8 pt-6">
+    <router-view />
+  </div>
 </template>
 
 
 <script setup>
-import { Button } from '@/components/ui/button'
+import Header from "@/components/HeaderNavbar.vue";
 </script>
 <style lang="">
 

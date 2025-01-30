@@ -30,7 +30,7 @@ module.exports = {
   ],
   'rules': {
 
-    quotes: ['error', 'single'],
+    quotes: ['error'],
     indent: ['error', 2],
     'comma-spacing': ['error', { before: false, after: true }],
     'vue/no-multi-spaces': 0,
