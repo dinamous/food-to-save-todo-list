@@ -103,7 +103,7 @@ const columns = [
   columnHelper.display({
     id: "actions",
     cell: ({ row }) =>
-      h("div", { class: "flex gap-2" }, [
+      h("div", { class: "flex gap-2 justify-end" }, [
         h(
           Button,
           {
