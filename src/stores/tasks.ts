@@ -1,10 +1,7 @@
-// src/stores/tasks.ts
 import { defineStore } from "pinia";
 
-import { useUsersStore } from "./users";
-
-type TaskStatus = "Pendente" | "Em progresso" | "Concluída";
-type TaskPriority = "Baixa" | "Média" | "Alta";
+export type TaskPriority = "Baixa" | "Média" | "Alta";
+export type TaskStatus = "Pendente" | "Em progresso" | "Concluída";
 
 export interface Task {
   id: string;
@@ -27,22 +24,43 @@ interface TaskSorting {
   order: "asc" | "desc";
 }
 
+interface TasksState {
+  tasks: Task[];
+  currentPage: number;
+  pageSize: number;
+  filters: TaskFilters;
+  sorting: TaskSorting;
+}
+
 export const useTasksStore = defineStore("tasks", {
-  state: () => ({
-    tasks: [] as Task[],
+  state: (): TasksState => ({
+    tasks: [],
     currentPage: 1,
     pageSize: 5,
-    filters: {} as TaskFilters,
+    filters: {},
     sorting: {
-      field: "createdAt" as keyof Task,
-      order: "desc" as "asc" | "desc",
+      field: "createdAt",
+      order: "desc",
     },
   }),
 
   actions: {
     initTasks() {
       const storedTasks = localStorage.getItem("tasks");
-      this.tasks = storedTasks ? JSON.parse(storedTasks) : [];
+      if (storedTasks) {
+        try {
+          this.tasks = JSON.parse(storedTasks).map((task: Task) => ({
+            ...task,
+            createdAt: new Date(task.createdAt),
+            dueDate: task.dueDate ? new Date(task.dueDate) : undefined,
+          }));
+        } catch (error) {
+          console.error("Error parsing tasks:", error);
+          this.tasks = [];
+        }
+      } else {
+        this.tasks = [];
+      }
     },
 
     createTask(task: Omit<Task, "id" | "createdAt">) {
@@ -93,7 +111,6 @@ export const useTasksStore = defineStore("tasks", {
     filteredTasks(state): Task[] {
       let tasks = [...state.tasks];
 
-      // Aplicar filtros
       if (state.filters.status) {
         tasks = tasks.filter((t) => t.status === state.filters.status);
       }
@@ -102,14 +119,12 @@ export const useTasksStore = defineStore("tasks", {
         tasks = tasks.filter((t) => t.priority === state.filters.priority);
       }
 
-      // Ordenação segura
       return tasks.sort((a, b) => {
         const field = state.sorting.field;
         const aValue = a[field];
         const bValue = b[field];
         const modifier = state.sorting.order === "asc" ? 1 : -1;
 
-        // Tratar campos opcionais
         if (aValue instanceof Date && bValue instanceof Date) {
           return (aValue.getTime() - bValue.getTime()) * modifier;
         }
