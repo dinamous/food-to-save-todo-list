@@ -8,8 +8,9 @@ import {
   type SortingState,
   useVueTable,
 } from "@tanstack/vue-table";
-import { ArrowUpDown, Pencil, Trash2 } from "lucide-vue-next";
+import { ArrowUpDown, Pencil, Plus, Trash2 } from "lucide-vue-next";
 import { computed, h, ref, watchEffect } from "vue";
+import { useRouter } from "vue-router";
 
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -178,14 +179,27 @@ const dueDateDefault = computed(() => {
   today.setDate(today.getDate() + 7);
   return today;
 });
+
+const router = useRouter();
+
+const goToUsersPage = () => {
+  router.push("/users");
+};
 </script>
 
 <template>
   <div class="w-full">
     <div class="flex items-end justify-between gap-4 py-4 mb-4">
-      <Button @click="isAddModalOpen = true" :disabled="!hasUsers">
-        Nova Tarefa
-      </Button>
+      <div class="flex gap-2">
+        <Button @click="isAddModalOpen = true" :disabled="!hasUsers">
+          Nova Tarefa
+        </Button>
+
+        <Button variant="secondary" @click="goToUsersPage" v-if="!hasUsers">
+          <Plus /> Adicionar Usuário
+        </Button>
+      </div>
+
 
       <div class="flex max-w-2xl flex-1 items-center gap-4">
         <div class="grid flex-1 gap-2">
@@ -284,3 +298,4 @@ const dueDateDefault = computed(() => {
       @saved="handleTaskSaved" />
   </div>
 </template>
+<style scoped></style>
