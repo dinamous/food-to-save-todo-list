@@ -1,5 +1,7 @@
-<script>
-import { Button } from "@/components/ui/button";
+<script setup lang="ts">
+import CardsDashboard from "../../components/dashboard/CardsDashboard.vue";
+
+
 </script>
 
 
@@ -8,9 +10,8 @@ import { Button } from "@/components/ui/button";
     <h1 class="text-3xl font-bold tracking-tighter">
       {{ $t("sidebar.dashboard") }}
     </h1>
-
-   <Button class="mt-4" variant="outline" prepend-icon="ArrowLeft">
-            Voltar ao início
-          </Button>
+  </div>
+  <div class="p-6 space-y-6">
+    <CardsDashboard />
   </div>
 </template>
