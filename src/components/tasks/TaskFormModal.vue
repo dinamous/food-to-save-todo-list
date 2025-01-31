@@ -1,86 +1,89 @@
 <script setup lang="ts">
-import { computed, ref, watch } from "vue"
+import { computed, ref, watch } from "vue";
 
-import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Task, useTasksStore } from "@/stores/tasks"
-import { useUsersStore } from "@/stores/users"
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { Task, useTasksStore } from "@/stores/tasks";
+import { useUsersStore } from "@/stores/users";
 
 const props = defineProps<{
-  task?: Task
-  modelValue: boolean
-}>()
+  task?: Task;
+  modelValue: boolean;
+}>();
 
-const emit = defineEmits(["update:modelValue", "saved"])
+const emit = defineEmits(["update:modelValue", "saved"]);
 
-const tasksStore = useTasksStore()
-const usersStore = useUsersStore()
-usersStore.initUsers()
+const tasksStore = useTasksStore();
+const usersStore = useUsersStore();
+usersStore.initUsers();
 
 const form = ref({
   id: "",
-  title: "",
+  title: "TASK-",
   description: "",
   status: "Pendente" as Task["status"],
   priority: "Média" as Task["priority"],
   dueDate: "",
-  assigneeId: "" as string | undefined, // Permitir que seja string ou undefined
-})
+  assigneeId: "" as string | undefined,
+});
 
 const isOpen = computed({
   get: () => props.modelValue,
-  set: (value) => emit("update:modelValue", value)
-})
+  set: (value) => emit("update:modelValue", value),
+});
 
 watch(() => props.task, (task) => {
   if (task) {
     form.value = {
-      id: task.id,
-      title: task.title,
-      description: task.description,
-      status: task.status,
-      priority: task.priority,
-      dueDate: task.dueDate ? new Date(task.dueDate).toISOString().split("T")[0] : "",
-      assigneeId: task.assigneeId || undefined, // Garantir que assigneeId seja string ou undefined
-    }
-  } else {
-    resetForm()
+      ...task,
+      dueDate: task.dueDate?.toISOString().split("T")[0] || "",
+      assigneeId: task.assigneeId ?? ""
+    };
   }
-})
+});
+
+const isValid = computed(() => {
+  return form.value.title.length >= 3 &&
+    form.value.description.length >= 10 &&
+    usersStore.users.length > 0;
+});
 
 const handleSubmit = () => {
-  if (!form.value.title || !usersStore.users.length) return
+  if (!form.value.title || !usersStore.users.length) return;
 
-  const taskData = {
+  const taskData: Task = {
     ...form.value,
+    createdAt: props.task?.createdAt || new Date(),
     dueDate: form.value.dueDate ? new Date(form.value.dueDate) : undefined,
-    assigneeId: form.value.assigneeId || undefined // Garante que assigneeId seja undefined caso não tenha sido preenchido
-  }
+    assigneeId: form.value.assigneeId || undefined
+  };
 
   if (props.task) {
-    tasksStore.updateTask(taskData as Task)
+    tasksStore.updateTask(taskData as Task);
   } else {
-    tasksStore.createTask(taskData as Omit<Task, "id" | "createdAt">)
+    tasksStore.createTask(taskData as Omit<Task, "id" | "createdAt">);
   }
 
-  emit("saved")
-  isOpen.value = false
-}
+  emit("saved");
+  isOpen.value = false;
+};
 
 const resetForm = () => {
   form.value = {
     id: "",
-    title: "",
+    title: "TASK-",
     description: "",
     status: "Pendente",
     priority: "Média",
     dueDate: "",
-    assigneeId: ""
-  }
-}
+    assigneeId: "",
+  };
+};
+const minDate = computed(() => new Date().toISOString().split("T")[0])
 </script>
 
 <template>
@@ -98,7 +101,7 @@ const resetForm = () => {
 
         <div class="grid gap-2">
           <Label for="description">Descrição</Label>
-          <Input id="description" v-model="form.description" />
+          <Textarea id="description" v-model="form.description" rows="4" /> <!-- Alterado para textarea -->
         </div>
 
         <div class="grid gap-2">
@@ -168,6 +171,15 @@ const resetForm = () => {
         <Button @click="handleSubmit">
           {{ task ? 'Salvar Alterações' : 'Criar Tarefa' }}
         </Button>
+      </div>
+
+      <div v-if="!isValid" class="text-sm text-red-500">
+        <p v-if="form.title.length < 3">
+          Título precisa ter pelo menos 3 caracteres
+        </p>
+        <p v-if="form.description.length < 10">
+          Descrição precisa ter pelo menos 10 caracteres
+        </p>
       </div>
     </DialogContent>
   </Dialog>

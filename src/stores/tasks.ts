@@ -19,8 +19,10 @@ interface TaskFilters {
   priority?: TaskPriority;
 }
 
+type SortableFields = "title" | "createdAt" | "dueDate"; // Campos ordenáveis explícitos
+
 interface TaskSorting {
-  field: keyof Task;
+  field: SortableFields;
   order: "asc" | "desc";
 }
 
@@ -99,7 +101,8 @@ export const useTasksStore = defineStore("tasks", {
       };
     },
 
-    setSorting(field: keyof Task, order: "asc" | "desc") {
+    setSorting(field: SortableFields, order: "asc" | "desc") {
+      // Tipo corrigido
       this.sorting = { field, order };
     },
 
