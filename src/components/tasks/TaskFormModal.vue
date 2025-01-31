@@ -54,12 +54,6 @@ watch(isOpen, (newVal) => {
   }
 });
 
-const isValid = computed(() => {
-  return form.value.title.length >= 3 &&
-    form.value.description.length >= 10 &&
-    usersStore.users.length > 0;
-});
-
 const handleSubmit = () => {
   if (!form.value.title || !usersStore.users.length) return;
 
@@ -91,6 +85,13 @@ const resetForm = () => {
     assigneeId: "",
   };
 };
+
+const isValid = computed(() => {
+  return form.value.title.length >= 3 &&
+    form.value.description.length >= 10 &&
+    form.value.assigneeId !== "" &&
+    usersStore.users.length > 0;
+});
 
 </script>
 
@@ -177,7 +178,7 @@ const resetForm = () => {
         <Button variant="outline" @click="isOpen = false">
           Cancelar
         </Button>
-        <Button @click="handleSubmit">
+        <Button @click="handleSubmit" :disabled="!isValid">
           {{ task ? 'Salvar Alterações' : 'Criar Tarefa' }}
         </Button>
       </div>
