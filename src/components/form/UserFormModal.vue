@@ -1,41 +1,58 @@
 <script setup lang="ts">
-import { ref } from "vue"
+import { computed, ref, watch } from "vue"
 
 import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
-import { useUsersStore } from "@/stores/users"
+import { User, useUsersStore } from "@/stores/users"
 
-const isOpen = ref(false)
+const props = defineProps<{
+  user?: User
+  modelValue: boolean
+}>()
+
+const emit = defineEmits(["update:modelValue", "saved"])
+
 const usersStore = useUsersStore()
 const form = ref({
+  id: "",
   name: "",
   email: ""
 })
 
-const handleSubmit = () => {
-  if (form.value.name && form.value.email) {
-    usersStore.addUser({
-      name: form.value.name,
-      email: form.value.email
-    })
-    isOpen.value = false
-    form.value = { name: "", email: "" }
+const isOpen = computed({
+  get: () => props.modelValue,
+  set: (value) => emit("update:modelValue", value)
+})
+
+watch(() => props.user, (user) => {
+  if (user) {
+    form.value = { ...user }
+  } else {
+    form.value = { id: "", name: "", email: "" }
   }
+}, { immediate: true })
+
+const handleSubmit = () => {
+  if (!form.value.name || !form.value.email) return
+
+  if (props.user) {
+    usersStore.updateUser(form.value)
+  } else {
+    usersStore.addUser(form.value)
+  }
+
+  emit("saved")
 }
 </script>
 
 <template>
   <Dialog v-model:open="isOpen">
-    <DialogTrigger as-child>
-      <Button variant="default">
-        Adicionar Usuário
-      </Button>
-    </DialogTrigger>
-
     <DialogContent>
       <DialogHeader>
-        <DialogTitle>Cadastrar Novo Usuário</DialogTitle>
+        <DialogTitle>
+          {{ user ? 'Editar Usuário' : 'Novo Usuário' }}
+        </DialogTitle>
       </DialogHeader>
 
       <div class="grid gap-4 py-4">
@@ -50,7 +67,7 @@ const handleSubmit = () => {
         </div>
 
         <Button @click="handleSubmit">
-          Salvar
+          {{ user ? 'Salvar Alterações' : 'Cadastrar' }}
         </Button>
       </div>
     </DialogContent>
