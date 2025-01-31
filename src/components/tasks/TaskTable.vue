@@ -113,6 +113,7 @@ const columns = [
               e.stopPropagation();
               selectedTask.value = row.original;
               isEditModalOpen.value = true;
+
             },
           },
           () => h(Pencil, { class: "h-4 w-4" })
@@ -170,6 +171,7 @@ const handleRowClick = (task: Task) => {
 
 const handleTaskSaved = () => {
   isAddModalOpen.value = false;
+  isEditModalOpen.value = false;
 };
 
 const hasUsers = computed(() => usersStore.users.length > 0);
@@ -294,8 +296,8 @@ const goToUsersPage = () => {
       </div>
     </div>
 
-    <TaskForm :model-value="isAddModalOpen" :task="selectedTask" @update:model-value="isAddModalOpen = $event"
-      @saved="handleTaskSaved" />
+    <TaskForm :model-value="isAddModalOpen || isEditModalOpen" :task="selectedTask"
+      @update:model-value="isAddModalOpen = $event" @saved="handleTaskSaved" />
   </div>
 </template>
 <style scoped></style>
