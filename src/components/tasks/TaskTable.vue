@@ -12,6 +12,7 @@ import { ArrowUpDown, Pencil, Plus, Trash2 } from "lucide-vue-next";
 import { computed, h, ref, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -41,6 +42,13 @@ watchEffect(() => {
   });
 });
 
+
+const statusColors: Record<TaskStatus, string> = {
+  "Pendente": "border-yellow-500 text-yellow-500",
+  "Em progresso": "border-blue-500 text-blue-500",
+  "Concluída": "border-green-500 text-green-500",
+  "all": ""
+};
 const columnHelper = createColumnHelper<Task>();
 
 const columns = [
@@ -65,6 +73,10 @@ const columns = [
   }),
   columnHelper.accessor("status", {
     header: "Status",
+    cell: ({ row }) => {
+      const status = row.getValue("status") as TaskStatus;
+      return h(Badge, { variant: "outline", class: statusColors[status] || "bg-gray-500 text-white" }, () => status);
+    },
   }),
   columnHelper.accessor("priority", {
     header: "Prioridade",
