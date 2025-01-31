@@ -8,7 +8,7 @@ import {
   type SortingState,
   useVueTable
 } from "@tanstack/vue-table"
-import { ArrowUpDown } from "lucide-vue-next"
+import { ArrowUpDown, Trash2 } from "lucide-vue-next"
 import { computed, h, ref, watchEffect } from "vue"
 
 import { Button } from "@/components/ui/button"
@@ -52,21 +52,14 @@ const columns = [
   }),
   columnHelper.display({
     id: "actions",
-    cell: ({ row }) => h("div", { class: "flex gap-2" }, [
-      h(Button, {
-        size: "sm",
-        variant: "outline",
-        onClick: () => {
-          selectedUser.value = row.original
-          isEditModalOpen.value = true
-        },
-      }, "Editar"),
-      h(Button, {
-        size: "sm",
-        variant: "destructive",
-        onClick: () => usersStore.deleteUser(row.original.id),
-      }, "Excluir")
-    ]),
+    cell: ({ row }) => h(Button, {
+      size: "sm",
+      variant: "ghost",
+      onClick: (e) => {
+        e.stopPropagation()
+        usersStore.deleteUser(row.original.id)
+      },
+    }, () => h(Trash2, { class: "h-4 w-4 text-red-500" })),
   }),
 ]
 
@@ -74,17 +67,28 @@ const table = useVueTable({
   data: computed(() => usersStore.paginatedUsers),
   columns,
   state: {
-    sorting: sorting.value,
+    get sorting() {
+      return sorting.value
+    },
+    set sorting(value) {
+      sorting.value = [...value] // Criando uma cópia para garantir reatividade
+    }
   },
   getCoreRowModel: getCoreRowModel(),
   getSortedRowModel: getSortedRowModel(),
   getPaginationRowModel: getPaginationRowModel(),
   onSortingChange: updater => {
-    sorting.value = typeof updater === "function"
-      ? updater(sorting.value)
-      : updater
+    const newSorting = typeof updater === "function" ? updater(sorting.value) : updater
+    sorting.value = [...newSorting]
+    usersStore.setPage(1) // Resetar para a primeira página ao ordenar
   },
 })
+
+// Abrir modal ao clicar na linha
+const handleRowClick = (user: User) => {
+  selectedUser.value = user
+  isEditModalOpen.value = true
+}
 
 watchEffect(() => {
   if (!isEditModalOpen.value) {
@@ -121,8 +125,8 @@ watchEffect(() => {
         </TableHeader>
 
         <TableBody>
-          <TableRow v-for="row in table.getRowModel().rows" :key="row.id"
-            :data-state="row.getIsSelected() && 'selected'">
+          <TableRow v-for="row in table.getRowModel().rows" :key="row.id" class="cursor-pointer hover:bg-muted/50"
+            @click="handleRowClick(row.original)">
             <TableCell v-for="cell in row.getVisibleCells()" :key="cell.id">
               <FlexRender :render="cell.column.columnDef.cell" :props="cell.getContext()" />
             </TableCell>
@@ -158,10 +162,8 @@ watchEffect(() => {
     </div>
 
     <!-- Modais -->
-    <!-- Modais corrigidos -->
     <UserFormModal v-model:model-value="isAddModalOpen" @saved="isAddModalOpen = false" />
 
-    <UserFormModal v-model:model-value="isEditModalOpen" :user="selectedUser ?? undefined"
-      @saved="isEditModalOpen = false" />
+    <UserFormModal v-model:model-value="isEditModalOpen" :user="selectedUser" @saved="isEditModalOpen = false" />
   </div>
 </template>
