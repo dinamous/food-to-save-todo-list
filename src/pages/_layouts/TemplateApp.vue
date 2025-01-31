@@ -7,7 +7,7 @@
 </template>
 
 <script setup>
-import HeaderNavbar from "@/components/HeaderNavbar.vue"
+import HeaderNavbar from "@/components/Sidebar/HeaderNavbar.vue"
 </script>
 
 <style>
