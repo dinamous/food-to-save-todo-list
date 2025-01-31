@@ -52,14 +52,19 @@ const columns = [
   }),
   columnHelper.display({
     id: "actions",
-    cell: ({ row }) => h(Button, {
-      size: "sm",
-      variant: "ghost",
-      onClick: (e: MouseEvent) => {
-        e.stopPropagation()
-        usersStore.deleteUser(row.original.id)
-      },
-    }, () => h(Trash2, { class: "h-4 w-4 text-red-500" })),
+    cell: ({ row }) =>
+      h("div", { class: "flex justify-end" }, [
+        h(Button, {
+          size: "sm",
+          variant: "ghost",
+          onClick: (e: MouseEvent) => {
+            e.stopPropagation()
+            usersStore.deleteUser(row.original.id)
+          },
+        }, () => h(Trash2, { class: "h-4 w-4 text-red-500" }))
+      ])
+
+    ,
   }),
 ]
 

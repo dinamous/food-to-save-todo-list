@@ -11,32 +11,28 @@ const routes = [
   {
     path: "/",
     component: AppLayout,
-
     children: [
       {
-        path: "/",
+        path: "", // Aqui ajustamos para o caminho vazio
         name: "Dashboard",
         component: Dashboard,
         meta: { title: "Dashboard" }
       },
       {
-        path: "/tasks",
+        path: "tasks", // Ajustamos para "tasks" sem a barra inicial
         name: "Tasks",
         component: Tasks,
         meta: { title: "Tarefas" }
       },
       {
-        path: "/users",
+        path: "users", // Ajustamos para "users" sem a barra inicial
         name: "Users",
         component: Users,
         meta: { title: "Usuários" }
       },
     ]
   }
-
-
-]
-
+];
 
 const router = createRouter({
   history: createWebHistory(),
@@ -44,8 +40,8 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  document.title = to.meta.title + " | Task to Save"
-  next()
-})
+  document.title = to.meta.title + " | Task to Save";
+  next();
+});
 
 export default router;
