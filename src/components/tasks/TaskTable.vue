@@ -301,7 +301,7 @@ const goToUsersPage = () => {
     </div>
 
     <TaskForm :model-value="isAddModalOpen || isEditModalOpen" :task="selectedTask"
-      @update:model-value="isAddModalOpen = $event" @saved="handleTaskSaved" />
+      @update:model-value="val => { isAddModalOpen = val; isEditModalOpen = val; }" @saved="handleTaskSaved" />
   </div>
 </template>
 <style scoped></style>
