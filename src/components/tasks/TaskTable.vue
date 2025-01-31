@@ -8,10 +8,11 @@ import {
   type SortingState,
   useVueTable,
 } from "@tanstack/vue-table";
-import { ArrowUpDown, Pencil, Plus, Trash2 } from "lucide-vue-next";
+import { ArrowUpDown, MoveRight, Pencil, Plus, Trash2, TrendingDown, TrendingUp } from "lucide-vue-next";
 import { computed, h, ref, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -41,6 +42,13 @@ watchEffect(() => {
   });
 });
 
+const statusColors: Record<TaskStatus, string> = {
+  "Pendente": "border-yellow-500 text-yellow-500",
+  "Em progresso": "border-blue-500 text-blue-500",
+  "Concluída": "border-green-500 text-green-500",
+  "all": ""
+};
+
 const columnHelper = createColumnHelper<Task>();
 
 const columns = [
@@ -65,9 +73,25 @@ const columns = [
   }),
   columnHelper.accessor("status", {
     header: "Status",
+    cell: ({ row }) => {
+      const status = row.getValue("status") as TaskStatus;
+      return h(Badge, { variant: "outline", class: statusColors[status] || "bg-gray-500 text-white" }, () => status);
+    },
   }),
   columnHelper.accessor("priority", {
     header: "Prioridade",
+    cell: ({ row }) => {
+      const priority = row.getValue("priority") as TaskPriority;
+      let icon;
+      if (priority === "Baixa") {
+        icon = h(TrendingDown, { class: "h-4 w-4 text-yellow-500" });
+      } else if (priority === "Média") {
+        icon = h(MoveRight, { class: "h-4 w-4 text-blue-500" });
+      } else if (priority === "Alta") {
+        icon = h(TrendingUp, { class: "h-4 w-4 text-red-500" });
+      }
+      return h("div", { class: "flex items-center gap-2" }, [icon, priority]);
+    },
   }),
   columnHelper.accessor("createdAt", {
     header: ({ column }) =>
@@ -113,7 +137,6 @@ const columns = [
               e.stopPropagation();
               selectedTask.value = row.original;
               isEditModalOpen.value = true;
-
             },
           },
           () => h(Pencil, { class: "h-4 w-4" })
@@ -186,7 +209,7 @@ const goToUsersPage = () => {
 <template>
   <div class="w-full">
     <div class="flex items-end justify-between gap-4 py-4 mb-4">
-      <div class="flex gap-2">
+      <div class="flex gap-2  flex-col md:flex-row">
         <Button @click="isAddModalOpen = true" :disabled="!hasUsers">
           Nova Tarefa
         </Button>
@@ -197,7 +220,7 @@ const goToUsersPage = () => {
       </div>
 
 
-      <div class="flex max-w-2xl flex-1 items-center gap-4">
+      <div class="flex max-w-2xl flex-1 items-end gap-4 ">
         <div class="grid flex-1 gap-2">
           <label for="statusFilter" class="text-sm font-medium text-gray-400">Filtrar por Status</label>
           <Select id="statusFilter" v-model="statusFilter">
@@ -289,7 +312,8 @@ const goToUsersPage = () => {
     </div>
 
     <TaskForm :model-value="isAddModalOpen || isEditModalOpen" :task="selectedTask"
-      @update:model-value="isAddModalOpen = $event" @saved="handleTaskSaved" />
+      @update:model-value="val => { isAddModalOpen = val; isEditModalOpen = val; }" @saved="handleTaskSaved" />
   </div>
 </template>
+
 <style scoped></style>

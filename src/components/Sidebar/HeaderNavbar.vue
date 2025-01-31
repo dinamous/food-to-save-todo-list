@@ -59,7 +59,7 @@ import {
 import { onMounted, onUnmounted, ref, watch } from "vue"
 import { useRoute } from "vue-router"
 
-import NavLink from "@/components/NavLink.vue"
+import NavLink from "@/components/Sidebar/NavLink.vue"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { useThemeStore } from "@/stores/theme"
