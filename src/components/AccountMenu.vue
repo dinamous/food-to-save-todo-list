@@ -1,14 +1,13 @@
 <template lang="html">
-  <!-- Cabeçalho -->
   <div class="flex flex-col px-2 py-1.5">
     <span class="text-sm font-medium">Dinamous</span>
     <span class="text-xs font-normal text-muted-foreground">dinamous@dev.com</span>
   </div>
 
-  <!-- Separador -->
+
   <div class="h-px bg-border" />
 
-  <!-- Itens do menu -->
+
   <div class="space-y-1">
     <router-link to="/account">
       <div class="flex gap-2 cursor-pointer rounded-sm px-2 py-1.5 text-sm hover:bg-accent">

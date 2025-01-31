@@ -2,10 +2,7 @@
 import DashboardGraphs from "@/components/dashboard/DashboardGraphs.vue";
 
 import CardsDashboard from "../../components/dashboard/CardsDashboard.vue";
-
-
 </script>
-
 
 <template>
   <div class="flex flex-col gap-4">

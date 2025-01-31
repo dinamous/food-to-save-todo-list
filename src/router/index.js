@@ -13,19 +13,19 @@ const routes = [
     component: AppLayout,
     children: [
       {
-        path: "", // Aqui ajustamos para o caminho vazio
+        path: "",
         name: "Dashboard",
         component: Dashboard,
         meta: { title: "Dashboard" }
       },
       {
-        path: "tasks", // Ajustamos para "tasks" sem a barra inicial
+        path: "tasks",
         name: "Tasks",
         component: Tasks,
         meta: { title: "Tarefas" }
       },
       {
-        path: "users", // Ajustamos para "users" sem a barra inicial
+        path: "users",
         name: "Users",
         component: Users,
         meta: { title: "Usuários" }
