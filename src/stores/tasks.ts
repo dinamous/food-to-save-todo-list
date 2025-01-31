@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 
-export type TaskPriority = "Baixa" | "Média" | "Alta";
-export type TaskStatus = "Pendente" | "Em progresso" | "Concluída";
+export type TaskPriority = "Baixa" | "Média" | "Alta" | "all";
+export type TaskStatus = "Pendente" | "Em progresso" | "Concluída" | "all";
 
 export interface Task {
   id: string;
@@ -87,7 +87,16 @@ export const useTasksStore = defineStore("tasks", {
     },
 
     setFilters(filters: TaskFilters) {
-      this.filters = filters;
+      this.filters = {
+        status:
+          filters.status && filters.status !== "all"
+            ? filters.status
+            : undefined,
+        priority:
+          filters.priority && filters.priority !== "all"
+            ? filters.priority
+            : undefined,
+      };
     },
 
     setSorting(field: keyof Task, order: "asc" | "desc") {
