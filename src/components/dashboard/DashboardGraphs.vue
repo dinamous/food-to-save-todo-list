@@ -13,9 +13,10 @@
         <VisAxis type="y" />
 
         <VisTooltip :triggers="triggers" />
-        <VisStackedBar :x="a" :y="b" :rounded-corners="5" color="#809ddd" />
+        <VisStackedBar :x="a" :y="b" :rounded-corners="5" color="#809ddd" :bar-width="50" />
 
-        <VisAxis type="x" :tick-format="tickFormat" :domain-line="false" />
+        <VisAxis type="x" :tick-format="tickFormat" :domain-line="false" :tick-text-angle="15" tick-text-align="left"
+          tick-text-fit-mode="wrap" />
       </VisXYContainer>
     </CardContent>
   </Card>
