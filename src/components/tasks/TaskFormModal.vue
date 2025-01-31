@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Task, useTasksStore } from "@/stores/tasks";
+import { useThemeStore } from "@/stores/theme";
 import { useUsersStore } from "@/stores/users";
 
 const props = defineProps<{
@@ -19,6 +20,7 @@ const emit = defineEmits(["update:modelValue", "saved"]);
 
 const tasksStore = useTasksStore();
 const usersStore = useUsersStore();
+const themeStore = useThemeStore();
 usersStore.initUsers();
 
 const form = ref({
@@ -43,6 +45,12 @@ watch(() => props.task, (task) => {
       dueDate: task.dueDate?.toISOString().split("T")[0] || "",
       assigneeId: task.assigneeId ?? ""
     };
+  }
+});
+
+watch(isOpen, (newVal) => {
+  if (!newVal) {
+    resetForm();
   }
 });
 
@@ -83,7 +91,8 @@ const resetForm = () => {
     assigneeId: "",
   };
 };
-const minDate = computed(() => new Date().toISOString().split("T")[0])
+
+const minDate = computed(() => new Date().toISOString().split("T")[0]);
 </script>
 
 <template>
@@ -101,7 +110,7 @@ const minDate = computed(() => new Date().toISOString().split("T")[0])
 
         <div class="grid gap-2">
           <Label for="description">Descrição</Label>
-          <Textarea id="description" v-model="form.description" rows="4" /> <!-- Alterado para textarea -->
+          <Textarea id="description" v-model="form.description" rows="4" />
         </div>
 
         <div class="grid gap-2">
@@ -146,7 +155,8 @@ const minDate = computed(() => new Date().toISOString().split("T")[0])
 
         <div class="grid gap-2">
           <Label for="dueDate">Data de Conclusão</Label>
-          <Input id="dueDate" type="date" v-model="form.dueDate" />
+          <Input id="dueDate" type="date" v-model="form.dueDate"
+            :class="{ 'text-gray-900': !themeStore.isDark, 'text-white': themeStore.isDark }" />
         </div>
 
         <div class="grid gap-2">
