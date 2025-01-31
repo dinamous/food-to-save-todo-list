@@ -29,7 +29,7 @@ const usersStore = useUsersStore()
 usersStore.initUsers()
 
 const sorting = ref<SortingState>([])
-const selectedUser = ref<User | null>(null)
+const selectedUser = ref<User | undefined>(undefined)
 const isEditModalOpen = ref(false)
 const isAddModalOpen = ref(false)
 
@@ -55,7 +55,7 @@ const columns = [
     cell: ({ row }) => h(Button, {
       size: "sm",
       variant: "ghost",
-      onClick: (e) => {
+      onClick: (e: MouseEvent) => {
         e.stopPropagation()
         usersStore.deleteUser(row.original.id)
       },
@@ -71,7 +71,7 @@ const table = useVueTable({
       return sorting.value
     },
     set sorting(value) {
-      sorting.value = [...value] // Criando uma cópia para garantir reatividade
+      sorting.value = [...value]
     }
   },
   getCoreRowModel: getCoreRowModel(),
@@ -80,11 +80,10 @@ const table = useVueTable({
   onSortingChange: updater => {
     const newSorting = typeof updater === "function" ? updater(sorting.value) : updater
     sorting.value = [...newSorting]
-    usersStore.setPage(1) // Resetar para a primeira página ao ordenar
+    usersStore.setPage(1)
   },
 })
 
-// Abrir modal ao clicar na linha
 const handleRowClick = (user: User) => {
   selectedUser.value = user
   isEditModalOpen.value = true
@@ -92,7 +91,7 @@ const handleRowClick = (user: User) => {
 
 watchEffect(() => {
   if (!isEditModalOpen.value) {
-    selectedUser.value = null
+    selectedUser.value = undefined
   }
 })
 </script>

@@ -1,3 +1,4 @@
+import { SortingState } from "@tanstack/vue-table";
 import { defineStore } from "pinia";
 
 export interface User {
@@ -52,6 +53,18 @@ export const useUsersStore = defineStore("users", {
 
     persistUsers() {
       localStorage.setItem("users", JSON.stringify(this.users));
+    },
+    sortUsers(sorting: SortingState) {
+      if (sorting.length > 0) {
+        const { id, desc } = sorting[0];
+        this.users.sort((a, b) => {
+          const aValue = a[id as keyof User];
+          const bValue = b[id as keyof User];
+          if (aValue < bValue) return desc ? 1 : -1;
+          if (aValue > bValue) return desc ? -1 : 1;
+          return 0;
+        });
+      }
     },
   },
 
