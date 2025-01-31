@@ -186,7 +186,7 @@ const goToUsersPage = () => {
 <template>
   <div class="w-full">
     <div class="flex items-end justify-between gap-4 py-4 mb-4">
-      <div class="flex gap-2">
+      <div class="flex gap-2  flex-col md:flex-row">
         <Button @click="isAddModalOpen = true" :disabled="!hasUsers">
           Nova Tarefa
         </Button>
@@ -197,7 +197,7 @@ const goToUsersPage = () => {
       </div>
 
 
-      <div class="flex max-w-2xl flex-1 items-center gap-4">
+      <div class="flex max-w-2xl flex-1 items-end gap-4 ">
         <div class="grid flex-1 gap-2">
           <label for="statusFilter" class="text-sm font-medium text-gray-400">Filtrar por Status</label>
           <Select id="statusFilter" v-model="statusFilter">
