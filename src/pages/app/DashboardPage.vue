@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import DashboardGraphs from "@/components/dashboard/DashboardGraphs.vue";
+
 import CardsDashboard from "../../components/dashboard/CardsDashboard.vue";
 
 
@@ -13,5 +15,6 @@ import CardsDashboard from "../../components/dashboard/CardsDashboard.vue";
   </div>
   <div class="p-6 space-y-6">
     <CardsDashboard />
+    <DashboardGraphs />
   </div>
 </template>

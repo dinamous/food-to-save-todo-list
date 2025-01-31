@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted } from "vue";
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { useTasksStore } from "@/stores/tasks"
 import { useUsersStore } from "@/stores/users"
 
