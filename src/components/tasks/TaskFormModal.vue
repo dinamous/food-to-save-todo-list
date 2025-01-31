@@ -92,7 +92,6 @@ const resetForm = () => {
   };
 };
 
-const minDate = computed(() => new Date().toISOString().split("T")[0]);
 </script>
 
 <template>

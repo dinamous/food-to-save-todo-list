@@ -176,12 +176,6 @@ const handleTaskSaved = () => {
 
 const hasUsers = computed(() => usersStore.users.length > 0);
 
-const dueDateDefault = computed(() => {
-  const today = new Date();
-  today.setDate(today.getDate() + 7);
-  return today;
-});
-
 const router = useRouter();
 
 const goToUsersPage = () => {
@@ -205,7 +199,6 @@ const goToUsersPage = () => {
 
       <div class="flex max-w-2xl flex-1 items-center gap-4">
         <div class="grid flex-1 gap-2">
-          <!-- Label para o filtro de status -->
           <label for="statusFilter" class="text-sm font-medium text-gray-400">Filtrar por Status</label>
           <Select id="statusFilter" v-model="statusFilter">
             <SelectTrigger>
@@ -229,7 +222,6 @@ const goToUsersPage = () => {
         </div>
 
         <div class="grid flex-1 gap-2">
-          <!-- Label para o filtro de prioridade -->
           <label for="priorityFilter" class="text-sm font-medium text-gray-400">Filtrar por Prioridade</label>
           <Select id="priorityFilter" v-model="priorityFilter">
             <SelectTrigger>
