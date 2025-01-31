@@ -58,7 +58,8 @@ const columns = [
     header: "Descrição",
     cell: ({ row }) => {
       const description = row.getValue("description") as string;
-      return description.slice(0, 30);
+      const truncatedDescription = description.length > 30 ? description.slice(0, 30) + "..." : description;
+      return h("div", { class: "truncate w-[200px]" }, truncatedDescription); // Adicionando classe CSS para truncar
     },
   }),
   columnHelper.accessor("status", {
@@ -77,7 +78,17 @@ const columns = [
         },
         () => ["Criado em", h(ArrowUpDown, { class: "ml-2 h-4 w-4" })]
       ),
-    cell: ({ row }) => new Date(row.getValue("createdAt")).toLocaleDateString(),
+    cell: ({ row }) => {
+      const createdAt = new Date(row.getValue("createdAt"));
+      const formattedDate = createdAt.toLocaleString("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      }).replace(",", " -");
+      return formattedDate;
+    },
   }),
   columnHelper.accessor("assigneeId", {
     header: "Responsável",
