@@ -8,7 +8,7 @@ import {
   type SortingState,
   useVueTable,
 } from "@tanstack/vue-table";
-import { ArrowUpDown, Pencil, Plus, Trash2 } from "lucide-vue-next";
+import { ArrowUpDown, MoveRight, Pencil, Plus, Trash2, TrendingDown, TrendingUp } from "lucide-vue-next";
 import { computed, h, ref, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 
@@ -42,13 +42,13 @@ watchEffect(() => {
   });
 });
 
-
 const statusColors: Record<TaskStatus, string> = {
   "Pendente": "border-yellow-500 text-yellow-500",
   "Em progresso": "border-blue-500 text-blue-500",
   "Concluída": "border-green-500 text-green-500",
   "all": ""
 };
+
 const columnHelper = createColumnHelper<Task>();
 
 const columns = [
@@ -80,6 +80,18 @@ const columns = [
   }),
   columnHelper.accessor("priority", {
     header: "Prioridade",
+    cell: ({ row }) => {
+      const priority = row.getValue("priority") as TaskPriority;
+      let icon;
+      if (priority === "Baixa") {
+        icon = h(TrendingDown, { class: "h-4 w-4 text-yellow-500" });
+      } else if (priority === "Média") {
+        icon = h(MoveRight, { class: "h-4 w-4 text-blue-500" });
+      } else if (priority === "Alta") {
+        icon = h(TrendingUp, { class: "h-4 w-4 text-red-500" });
+      }
+      return h("div", { class: "flex items-center gap-2" }, [icon, priority]);
+    },
   }),
   columnHelper.accessor("createdAt", {
     header: ({ column }) =>
@@ -125,7 +137,6 @@ const columns = [
               e.stopPropagation();
               selectedTask.value = row.original;
               isEditModalOpen.value = true;
-
             },
           },
           () => h(Pencil, { class: "h-4 w-4" })
@@ -304,4 +315,5 @@ const goToUsersPage = () => {
       @update:model-value="val => { isAddModalOpen = val; isEditModalOpen = val; }" @saved="handleTaskSaved" />
   </div>
 </template>
+
 <style scoped></style>
