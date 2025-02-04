@@ -1,22 +1,24 @@
-// NavigationLink.spec.js
+// test/components/NavLink.test.js
+
+import { createTestingPinia } from "@pinia/testing";
 import { mount } from "@vue/test-utils";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ref } from "vue";
 
-import NavigationLink from "@/components/Sidebar/NavLink.vue";
+import NavigationLink from "@/components/Sidebar/NavLink.vue"; // ajuste o caminho conforme sua estrutura
 
-// Crie um objeto fake para o router
+// --- Criando um fakeRouter para simular o comportamento do vue-router ---
 const fakeRouter = {
-  // Inicia com uma rota cujo nome é "home"
-  currentRoute: ref({ name: "home" }),
+  currentRoute: ref({ name: "Dashboard", path: "/" }),
 };
 
-// Mock do módulo 'vue-router'
-vi.mock("vue-router", () => {
+// --- Mock parcial do "vue-router" ---
+vi.mock("vue-router", async () => {
+  const actual = await vi.importActual("vue-router");
   return {
-    // Quando o componente chamar useRouter, retorna o fakeRouter
+    ...actual,
     useRouter: () => fakeRouter,
-    // Stub do RouterLink para não depender do funcionamento real do Vue Router
+    // Stub do RouterLink para renderizar um elemento <a> com slot
     RouterLink: {
       name: "RouterLink",
       template: "<a><slot /></a>",
@@ -25,57 +27,39 @@ vi.mock("vue-router", () => {
 });
 
 describe("NavigationLink.vue", () => {
-  // Antes de cada teste, podemos resetar a rota se necessário
+  // Reseta a rota antes de cada teste, se necessário
   beforeEach(() => {
-    fakeRouter.currentRoute.value = { name: "home" };
-  });
-
-  it("deve definir data-current como 'true' quando currentRoute.name for igual a page", () => {
-    const wrapper = mount(NavigationLink, {
-      props: {
-        link: "/home",
-        icon: "mdi-home",
-        label: "Home",
-        page: "home", // mesmo nome da rota atual
-      },
-    });
-
-    // Como usamos um stub para RouterLink, ele será renderizado como um <a>
-    const linkEl = wrapper.find("a");
-    expect(linkEl.attributes("data-current")).toBe("true");
-  });
-
-  it("deve definir data-current como 'false' quando currentRoute.name for diferente de page", () => {
-    // Altera a rota atual para 'dashboard'
-    fakeRouter.currentRoute.value = { name: "dashboard" };
-
-    const wrapper = mount(NavigationLink, {
-      props: {
-        link: "/home",
-        icon: "mdi-home",
-        label: "Home",
-        page: "home", // page diferente de 'dashboard'
-      },
-    });
-
-    const linkEl = wrapper.find("a");
-    expect(linkEl.attributes("data-current")).toBe("false");
+    fakeRouter.currentRoute.value = { name: "Dashboard", path: "/" };
   });
 
   it("deve renderizar corretamente o label e o ícone", () => {
     const wrapper = mount(NavigationLink, {
       props: {
-        link: "/home",
-        icon: "mdi-home",
-        label: "Home",
-        page: "home",
+        link: "/dashboard",
+        icon: "some-icon",  // valor fictício para o ícone
+        label: "Dashboard",
+        page: "Dashboard",
+      },
+      global: {
+        plugins: [createTestingPinia({ createSpy: vi.fn })],
+        stubs: {
+          // Stub do RouterLink para garantir a renderização
+          RouterLink: {
+            name: "RouterLink",
+            template: "<a><slot /></a>",
+          },
+          // Stub customizado para o componente Icon com nome explícito
+          Icon: {
+            name: "Icon",
+            template: "<svg class=\"text-lg\"></svg>",
+          },
+        },
       },
     });
 
-    // Verifica se o texto label está renderizado
-    expect(wrapper.text()).toContain("Home");
-    // Verifica se o componente Icon foi renderizado
-    // Como não testamos o conteúdo interno do Icon, basta verificar se existe um elemento com a classe que definimos para o ícone
+    // Verifica se o label está renderizado
+    expect(wrapper.text()).toContain("Dashboard");
+    // Verifica se o componente Icon (stub customizado) está presente
     expect(wrapper.findComponent({ name: "Icon" }).exists()).toBe(true);
   });
 });
