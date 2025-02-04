@@ -47,7 +47,7 @@ const handleSubmit = () => {
 </script>
 
 <template>
-  <Dialog v-model:open="isOpen">
+  <Dialog v-model:open="isOpen" id="#dialog">
     <DialogContent>
       <DialogHeader>
         <DialogTitle>
