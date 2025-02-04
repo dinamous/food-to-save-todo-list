@@ -5,12 +5,12 @@ import { useRoute } from "vue-router";
 
 import HeaderNavbar from "@/components/Sidebar/HeaderNavbar.vue";
 
-// 🛠 Mock do Vue Router, incluindo `useRoute` e `RouterLink`
+
 vi.mock("vue-router", () => ({
   useRoute: () => ({
-    path: "/", // Simulando uma rota válida
+    path: "/",
   }),
-  RouterLink: { template: "<a><slot /></a>" }, // Mock para evitar erro de importação
+  RouterLink: { template: "<a><slot /></a>" },
 }));
 
 describe("HeaderNavbar.vue", () => {
@@ -18,17 +18,17 @@ describe("HeaderNavbar.vue", () => {
     const wrapper = mount(HeaderNavbar, {
       global: {
         plugins: [
-          createTestingPinia({ createSpy: vi.fn }) // Injeta Pinia no teste
+          createTestingPinia({ createSpy: vi.fn })
         ],
         stubs: {
-          Icon: { template: "<svg></svg>" }, // Stub para evitar erro de importação
-          NavLink: { template: "<div></div>" }, // Stub para componentes filhos
-          AccountMenu: { template: "<div></div>" } // Stub para evitar erros
+          Icon: { template: "<svg></svg>" },
+          NavLink: { template: "<div></div>" },
+          AccountMenu: { template: "<div></div>" }
         },
       },
     });
 
-    // Verifica se o componente foi renderizado corretamente
+
     expect(wrapper.exists()).toBe(true);
   });
 });
